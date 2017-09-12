@@ -39,10 +39,10 @@ public class MainActivity extends AppCompatActivity {
                 int colorFrom = context.getResources().getColor(R.color.white);
                 int colorTo = getResources().getColor(R.color.green);
                 if (stickyswitch.getDirection() == StickySwitch.Direction.RIGHT) {
-//                    changeBgColor(colorFrom, colorTo);
+//                    changeBgColor(colorFrom, colorTo); //not todo: not required but don't delete
                     onStartBlinking();
                 } else {
-//                    changeBgColor(colorTo, colorFrom);
+//                    changeBgColor(colorTo, colorFrom);//not todo: not required but don't delete
                     onStopBlinking();
                 }
             }
@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(context, "SelectedInterval=" + selectedInterval, Toast.LENGTH_SHORT).show();
                 PrefsUtil.setBlinkStatus(context, true);
                 PrefsUtil.setInterval(context, selectedInterval);
+                txtSay.setText(String.format(context.getString(R.string.blink_just_sit_back_and_work), String.valueOf(PrefsUtil.getBlinkInterval(context))));
             }
 
             @Override
@@ -66,14 +67,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         imgBoy.setBackgroundResource(R.drawable.boy_working);
-        txtSay.setText(context.getString(R.string.blink_just_sit_back_and_work));
+        txtSay.setText(String.format(context.getString(R.string.blink_just_sit_back_and_work), String.valueOf(PrefsUtil.getBlinkInterval(context))));
     }
 
     private void onStopBlinking() {
         imgBoy.setBackgroundResource(R.drawable.boy_relax);
         txtSay.setText(context.getString(R.string.relax_txt));
         PrefsUtil.setBlinkStatus(context, false);
-
     }
 
     private void init() {
@@ -84,9 +84,10 @@ public class MainActivity extends AppCompatActivity {
         stickyswitch = (StickySwitch) findViewById(R.id.stickySwitch);
 
         if (PrefsUtil.getBlinkStatus(context)) {
-            stickyswitch.setDirection(StickySwitch.Direction.RIGHT,false);
+            stickyswitch.setDirection(StickySwitch.Direction.RIGHT, false);
+            txtSay.setText(String.format(context.getString(R.string.blink_just_sit_back_and_work), String.valueOf(PrefsUtil.getBlinkInterval(context))));
         } else {
-            stickyswitch.setDirection(StickySwitch.Direction.LEFT,false);
+            stickyswitch.setDirection(StickySwitch.Direction.LEFT, false);
         }
     }
 
