@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="blackBracket.blink.MainActivity">
+
+    <RelativeLayout
+        android:id="@+id/layoutRelative"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <io.ghyeok.stickyswitch.widget.StickySwitch
+            android:id="@+id/sticky_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            app:ss_animationDuration="600"
+            app:ss_animationType="line"
+            app:ss_iconPadding="18dp"
+            app:ss_iconSize="28dp"
+            app:ss_leftIcon="@drawable/ic_crying"
+            app:ss_leftText="Blinking starts"
+            app:ss_rightIcon="@drawable/ic_bored"
+            app:ss_rightText="Blinking stops"
+            app:ss_selectedTextSize="14sp"
+            app:ss_sliderBackgroundColor="@color/black"
+            app:ss_switchColor="@color/darkGreen"
+            app:ss_textColor="@color/white"
+            app:ss_textSize="12sp" />
+    </RelativeLayout>
+
+</LinearLayout>
