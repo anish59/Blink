@@ -9,26 +9,57 @@
     <RelativeLayout
         android:id="@+id/layoutRelative"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:padding="@dimen/dimen_16dp">
 
         <io.ghyeok.stickyswitch.widget.StickySwitch
-            android:id="@+id/sticky_switch"
+            android:id="@+id/stickySwitch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="?actionBarSize"
             app:ss_animationDuration="600"
             app:ss_animationType="line"
             app:ss_iconPadding="18dp"
             app:ss_iconSize="28dp"
             app:ss_leftIcon="@drawable/ic_crying"
-            app:ss_leftText="Blinking starts"
+            app:ss_leftText="Stop"
             app:ss_rightIcon="@drawable/ic_bored"
-            app:ss_rightText="Blinking stops"
+            app:ss_rightText="Start"
             app:ss_selectedTextSize="14sp"
             app:ss_sliderBackgroundColor="@color/black"
             app:ss_switchColor="@color/darkGreen"
-            app:ss_textColor="@color/white"
+            app:ss_textColor="@color/black"
             app:ss_textSize="12sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/stickySwitch"
+            android:animateLayoutChanges="true"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <blackBracket.blink.widgets.CTextView
+                android:id="@+id/txtSay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_16dp"
+                android:gravity="center_horizontal"
+                android:text="@string/blink_just_sit_back_and_work"
+                android:textSize="@dimen/dimen_24sp"
+                app:font="@string/ArchitectsDaughterRegular" />
+
+            <ImageView
+                android:id="@+id/imgBoy"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="bottom|center_horizontal"
+                android:layout_marginTop="@dimen/dimen_16dp"
+                android:background="@drawable/boy_working" />
+        </LinearLayout>
+
+
     </RelativeLayout>
 
 </LinearLayout>
