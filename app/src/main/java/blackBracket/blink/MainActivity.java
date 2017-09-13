@@ -11,7 +11,11 @@ import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Random;
+
 import blackBracket.blink.dialog.SettingTimeDialog;
+import blackBracket.blink.helper.AppAlarmHelper;
+import blackBracket.blink.helper.AppConstants;
 import blackBracket.blink.helper.PrefsUtil;
 import blackBracket.blink.widgets.CTextView;
 import io.ghyeok.stickyswitch.widget.StickySwitch;
@@ -58,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
                 PrefsUtil.setBlinkStatus(context, true);
                 PrefsUtil.setInterval(context, selectedInterval);
                 txtSay.setText(String.format(context.getString(R.string.blink_just_sit_back_and_work), String.valueOf(PrefsUtil.getBlinkInterval(context))));
+                AppAlarmHelper appAlarmHelper = new AppAlarmHelper();
+                appAlarmHelper.setBlinkNotification(context, AppConstants.ALARM_ID, selectedInterval);
             }
 
             @Override
@@ -74,6 +80,8 @@ public class MainActivity extends AppCompatActivity {
         imgBoy.setBackgroundResource(R.drawable.boy_relax);
         txtSay.setText(context.getString(R.string.relax_txt));
         PrefsUtil.setBlinkStatus(context, false);
+        AppAlarmHelper appAlarmHelper = new AppAlarmHelper();
+        appAlarmHelper.cancelAlarm(context, AppConstants.ALARM_ID);
     }
 
     private void init() {
@@ -88,6 +96,8 @@ public class MainActivity extends AppCompatActivity {
             txtSay.setText(String.format(context.getString(R.string.blink_just_sit_back_and_work), String.valueOf(PrefsUtil.getBlinkInterval(context))));
         } else {
             stickyswitch.setDirection(StickySwitch.Direction.LEFT, false);
+            imgBoy.setBackgroundResource(R.drawable.boy_relax);
+            txtSay.setText(context.getString(R.string.relax_txt));
         }
     }
 

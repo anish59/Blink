@@ -1,6 +1,7 @@
 package blackBracket.blink.helper;
 
 import android.app.AlarmManager;
+import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -8,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.v4.app.NotificationCompat;
+import android.widget.Toast;
 
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
@@ -20,6 +22,7 @@ import blackBracket.blink.R;
  */
 
 public class AppAlarmHelper extends BroadcastReceiver {
+    private static final String ACTION_1 = "Shut Off";
     private static AlarmManager alarmManager;
 
 
@@ -34,13 +37,17 @@ public class AppAlarmHelper extends BroadcastReceiver {
         PendingIntent notificationPendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT);
 
 
-
+        int alarmId = intent.getIntExtra(IntentConstants.INTENT_ALARM_ID, 0);
+        Intent action1Intent = new Intent(context, NotificationActionService.class)
+                .setAction(ACTION_1);
+        action1Intent.putExtra(IntentConstants.INTENT_ALARM_ID, alarmId);
+        PendingIntent action1PendingIntent = PendingIntent.getService(context, 0, action1Intent, PendingIntent.FLAG_ONE_SHOT);
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
                 .setContentTitle("Blink!, its blink time..!!  *_* ")
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentIntent(notificationPendingIntent);
-                /*.addAction(takeAction)*/
+                .setContentIntent(notificationPendingIntent)
+                .addAction(0, "Action 1", action1PendingIntent);
     }
 
 
@@ -87,11 +94,15 @@ public class AppAlarmHelper extends BroadcastReceiver {
     }
 
     private void initBootAlarm(Context context) {
-        ComponentName receiver = new ComponentName(context, AppAlarmHelper.class);
-        PackageManager pm = context.getPackageManager();
-        pm.setComponentEnabledSetting(receiver,
-                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-                PackageManager.DONT_KILL_APP);
+        try {
+            ComponentName receiver = new ComponentName(context, AppAlarmHelper.class);
+            PackageManager pm = context.getPackageManager();
+            pm.setComponentEnabledSetting(receiver,
+                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                    PackageManager.DONT_KILL_APP);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private AlarmManager getAlarmManager(Context context) {
@@ -100,5 +111,30 @@ public class AppAlarmHelper extends BroadcastReceiver {
             alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         }
         return alarmManager;
+    }
+
+
+    public static class NotificationActionService extends IntentService {
+
+        public NotificationActionService() {
+            super(NotificationActionService.class.getSimpleName());
+        }
+
+        @Override
+        protected void onHandleIntent(Intent intent) {
+            String action = intent.getAction();
+            System.out.println("Received notification action: " + action);
+            if (ACTION_1.equals(action)) {
+                PrefsUtil.setBlinkStatus(getApplicationContext(), false);
+                AppAlarmHelper appAlarmHelper = new AppAlarmHelper();
+                int cancelId = intent.getIntExtra(IntentConstants.INTENT_ALARM_ID, 0);
+                if (cancelId != 0) {
+                    appAlarmHelper.cancelAlarm(getApplicationContext(), cancelId);
+                    Toast.makeText(this, "Blinking stop..!", Toast.LENGTH_SHORT).show();
+                }
+                // TODO: handle action 1.
+                // If you want to cancel the notification: NotificationManagerCompat.from(this).cancel(NOTIFICATION_ID);
+            }
+        }
     }
 }
