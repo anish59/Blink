@@ -36,7 +36,6 @@ public class AppAlarmHelper extends BroadcastReceiver {
         notificationIntent.setFlags(/*Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | */Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent notificationPendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT);
 
-
         int alarmId = intent.getIntExtra(IntentConstants.INTENT_ALARM_ID, 0);
         Intent action1Intent = new Intent(context, NotificationActionService.class)
                 .setAction(ACTION_1);

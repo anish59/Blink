@@ -1,5 +1,6 @@
 package blackBracket.blink;
 
+import android.Manifest;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -9,13 +10,17 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.gun0912.tedpermission.PermissionListener;
+
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import blackBracket.blink.dialog.SettingTimeDialog;
 import blackBracket.blink.helper.AppAlarmHelper;
 import blackBracket.blink.helper.AppConstants;
+import blackBracket.blink.helper.FunctionHelper;
 import blackBracket.blink.helper.PrefsUtil;
 import blackBracket.blink.widgets.CTextView;
 import io.ghyeok.stickyswitch.widget.StickySwitch;
@@ -91,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
         layoutRelative = (RelativeLayout) findViewById(R.id.layoutRelative);
         stickyswitch = (StickySwitch) findViewById(R.id.stickySwitch);
 
+
         if (PrefsUtil.getBlinkStatus(context)) {
             stickyswitch.setDirection(StickySwitch.Direction.RIGHT, false);
             txtSay.setText(String.format(context.getString(R.string.blink_just_sit_back_and_work), String.valueOf(PrefsUtil.getBlinkInterval(context))));
@@ -99,6 +105,21 @@ public class MainActivity extends AppCompatActivity {
             imgBoy.setBackgroundResource(R.drawable.boy_relax);
             txtSay.setText(context.getString(R.string.relax_txt));
         }
+
+        FunctionHelper.setPermission(context,
+                new String[]{Manifest.permission.VIBRATE, Manifest.permission.WAKE_LOCK, Manifest.permission.RECEIVE_BOOT_COMPLETED}
+                , new PermissionListener() {
+                    @Override
+                    public void onPermissionGranted() {
+                        //nothing now
+                    }
+
+                    @Override
+                    public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+                        //nothing now
+                    }
+                });
+
     }
 
 

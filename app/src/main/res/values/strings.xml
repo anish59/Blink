@@ -11,6 +11,7 @@
     <string name="cancel">Cancel</string>
     <string name="max_interval_prompt">You can not select interval more than 20 min, well its not good for your eyes.</string>
     <string name="min_interval_prompt">You can not select interval less than 5 min, well its not good to loose concentration now and then.</string>
+    <string name="if_you_reject_permission">If you reject this, you wont be able to use this app</string>
 
     <!--Fonts-->
     <string name="ArchitectsDaughterRegular">ArchitectsDaughterRegular.ttf</string>
