@@ -2,16 +2,20 @@ package blackBracket.blink.helper;
 
 import android.app.AlarmManager;
 import android.app.IntentService;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
 import java.util.Calendar;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import blackBracket.blink.MainActivity;
@@ -25,28 +29,58 @@ public class AppAlarmHelper extends BroadcastReceiver {
     private static final String ACTION_1 = "Shut Off";
     private static AlarmManager alarmManager;
 
-
     @Override
     public void onReceive(Context context, Intent intent) {
-        showNotification(context, intent);
+        String action;
+        action = intent.getAction();
+
+        if (action != null && intent.getBooleanExtra(IntentConstants.INTENT_IS_ACTION, false)) {
+            if (intent.getBooleanExtra(IntentConstants.INTENT_ACTION_IS_SHUT_OFF, false)) {
+                cancelAlarm(context, AppConstants.ALARM_ID);
+                PrefsUtil.setBlinkStatus(context, false);
+                NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                notificationManager.cancel(AppConstants.NotificationBuilderId);
+                if (FunctionHelper.isAppRunning(context, context.getApplicationContext().getPackageName())) {
+                    Intent refreshingAppIntent = new Intent(context, MainActivity.class);
+                    refreshingAppIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    context.startActivity(refreshingAppIntent);
+                }
+            }
+        } else {
+            showNotification(context);
+        }
     }
 
-    private void showNotification(Context context, Intent intent) {
-        Intent notificationIntent = new Intent(context, MainActivity.class);
-        notificationIntent.setFlags(/*Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | */Intent.FLAG_ACTIVITY_NEW_TASK);
-        PendingIntent notificationPendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT);
+    private void showNotification(Context context) {
 
-        int alarmId = intent.getIntExtra(IntentConstants.INTENT_ALARM_ID, 0);
-        Intent action1Intent = new Intent(context, NotificationActionService.class)
-                .setAction(ACTION_1);
-        action1Intent.putExtra(IntentConstants.INTENT_ALARM_ID, alarmId);
-        PendingIntent action1PendingIntent = PendingIntent.getService(context, 0, action1Intent, PendingIntent.FLAG_ONE_SHOT);
+        Intent intent = new Intent(context, MainActivity.class);
+        int requestCode = 0;
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, requestCode, intent, PendingIntent.FLAG_ONE_SHOT);
 
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
-                .setContentTitle("Blink!, its blink time..!!  *_* ")
+        NotificationCompat.Builder noBuilder = new NotificationCompat.Builder(context)
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentIntent(notificationPendingIntent)
-                .addAction(0, "Action 1", action1PendingIntent);
+                .setContentTitle(context.getString(R.string.blink_its_time_to_blink))
+                .setContentText(context.getString(R.string.blink))
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent);
+        noBuilder.setDefaults(Notification.DEFAULT_ALL);
+//        noBuilder.setDefaults(Notification.DEFAULT_SOUND);//to make sound
+        noBuilder.setVibrate(new long[]{1000, 1000, 1000, 1000});//to vibrate
+        noBuilder.setLights(Color.WHITE, 1000, 500);
+//        noBuilder.setPriority(Notification.P);
+
+        //Maybe intent
+        Intent shutOff = new Intent(context, AppAlarmHelper.class);
+        shutOff.putExtra(IntentConstants.INTENT_IS_ACTION, true);
+        shutOff.putExtra(IntentConstants.INTENT_ACTION_IS_SHUT_OFF, true);
+        shutOff.setAction(AppConstants.ACTION_SHUT_OFF);
+        PendingIntent pendingIntentShutOff = PendingIntent.getBroadcast(context, AppConstants.NotificationActionID, shutOff, PendingIntent.FLAG_UPDATE_CURRENT);
+        noBuilder.addAction(0, "Shut off", pendingIntentShutOff);
+
+
+        int m = AppConstants.NotificationBuilderId;//for keeping same notification,not adding any else on its top
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(m, noBuilder.build());
     }
 
 
@@ -64,16 +98,24 @@ public class AppAlarmHelper extends BroadcastReceiver {
         * */
         switch (interval) {
             case 5:
-                alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), TimeUnit.MINUTES.toMillis(5), alarmIntent);
+                alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP
+                        , calendar.getTimeInMillis() + TimeUnit.MINUTES.toMillis(5)
+                        , TimeUnit.MINUTES.toMillis(5), alarmIntent);
                 break;
             case 10:
-                alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), TimeUnit.MINUTES.toMillis(10), alarmIntent);
+                alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP
+                        , calendar.getTimeInMillis() + TimeUnit.MINUTES.toMillis(10)
+                        , TimeUnit.MINUTES.toMillis(10), alarmIntent);
                 break;
             case 15:
-                alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), TimeUnit.MINUTES.toMillis(15), alarmIntent);
+                alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP
+                        , calendar.getTimeInMillis() + TimeUnit.MINUTES.toMillis(15)
+                        , TimeUnit.MINUTES.toMillis(15), alarmIntent);
                 break;
             case 20:
-                alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), TimeUnit.MINUTES.toMillis(20), alarmIntent);
+                alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP
+                        , calendar.getTimeInMillis() + TimeUnit.MINUTES.toMillis(20)
+                        , TimeUnit.MINUTES.toMillis(20), alarmIntent);
                 break;
 
         }

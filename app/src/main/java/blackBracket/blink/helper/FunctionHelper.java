@@ -1,5 +1,6 @@
 package blackBracket.blink.helper;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.annotation.NonNull;
@@ -7,6 +8,8 @@ import android.support.v7.app.AlertDialog;
 
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
+
+import java.util.List;
 
 import blackBracket.blink.R;
 
@@ -47,5 +50,19 @@ public class FunctionHelper {
 
     public interface DialogOptionsSelectedListener {
         void onSelect(boolean isYes);
+    }
+
+    public static boolean isAppRunning(final Context context, final String packageName) {
+        final ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        final List<ActivityManager.RunningAppProcessInfo> procInfos = activityManager.getRunningAppProcesses();
+        if (procInfos != null)
+        {
+            for (final ActivityManager.RunningAppProcessInfo processInfo : procInfos) {
+                if (processInfo.processName.equals(packageName)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
