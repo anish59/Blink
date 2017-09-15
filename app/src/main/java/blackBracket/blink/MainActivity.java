@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
         colorAnimation.start();
     }
 
-    @Override
+   /* @Override
     protected void onPause() {
         if (mAdView != null) {
             mAdView.pause();
@@ -170,5 +170,5 @@ public class MainActivity extends AppCompatActivity {
             mAdView.destroy();
         }
         super.onDestroy();
-    }
+    }*/
 }
