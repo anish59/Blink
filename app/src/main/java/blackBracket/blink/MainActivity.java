@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initAds() {
-        AdRequest adRequest = new AdRequest.Builder().addTestDevice("03BE0FD0160FB62F72A0AA8DD56866F2")
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice("03BE0FD0160FB62F72A0AA8DD56866F2") //todo remove test device when you are uploading
                 .build();
         mAdView.loadAd(adRequest);
     }
