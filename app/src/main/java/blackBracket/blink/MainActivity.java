@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.gun0912.tedpermission.PermissionListener;
 
 import org.jetbrains.annotations.NotNull;
@@ -32,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private Context context;
     private blackBracket.blink.widgets.CTextView txtSay;
     private android.widget.ImageView imgBoy;
+    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +42,13 @@ public class MainActivity extends AppCompatActivity {
         context = this;
         init();
         initListener();
+        initAds();
+    }
+
+    private void initAds() {
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice("03BE0FD0160FB62F72A0AA8DD56866F2")
+                .build();
+        mAdView.loadAd(adRequest);
     }
 
     private void initListener() {
@@ -93,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         imgBoy = (ImageView) findViewById(R.id.imgBoy);
         txtSay = (CTextView) findViewById(R.id.txtSay);
+        mAdView = (AdView) findViewById(R.id.adView);
         layoutRelative = (RelativeLayout) findViewById(R.id.layoutRelative);
         stickyswitch = (StickySwitch) findViewById(R.id.stickySwitch);
 
@@ -107,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         FunctionHelper.setPermission(context,
-                new String[]{Manifest.permission.VIBRATE, Manifest.permission.WAKE_LOCK, Manifest.permission.RECEIVE_BOOT_COMPLETED}
+                new String[]{Manifest.permission.VIBRATE, Manifest.permission.INTERNET, Manifest.permission.WAKE_LOCK, Manifest.permission.RECEIVE_BOOT_COMPLETED}
                 , new PermissionListener() {
                     @Override
                     public void onPermissionGranted() {
@@ -135,5 +146,29 @@ public class MainActivity extends AppCompatActivity {
 
         });
         colorAnimation.start();
+    }
+
+    @Override
+    protected void onPause() {
+        if (mAdView != null) {
+            mAdView.pause();
+        }
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        if (mAdView != null) {
+            mAdView.resume();
+        }
+        super.onResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (mAdView != null) {
+            mAdView.destroy();
+        }
+        super.onDestroy();
     }
 }

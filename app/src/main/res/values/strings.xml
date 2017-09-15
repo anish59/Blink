@@ -20,4 +20,10 @@
     <string name="blink_its_time_to_blink">Its blink time..!!  *_*</string>
     <string name="blink">Blink!</string>
     <!--Fonts-->
+
+
+    <!-- AdMob ad unit IDs -->
+    <string name="banner_home_footer">ca-app-pub-3454303483023480/4485257033</string>
+    <!--<string name="banner_home_footer">ca-app-pub-3454303483023480~7829605673</string>-->
+    <!--<string name="interstitial_full_screen"></string>-->
 </resources>
