@@ -15,7 +15,6 @@ import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
 import java.util.Calendar;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import blackBracket.blink.MainActivity;
@@ -33,14 +32,16 @@ public class AppAlarmHelper extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         String action;
         action = intent.getAction();
-
+        if (!PrefsUtil.getBlinkStatus(context)) {
+            return; //means if blink status is false then it will show no notification.
+        }
         if (action != null && intent.getBooleanExtra(IntentConstants.INTENT_IS_ACTION, false)) {
             if (intent.getBooleanExtra(IntentConstants.INTENT_ACTION_IS_SHUT_OFF, false)) {
                 cancelAlarm(context, AppConstants.ALARM_ID);
                 PrefsUtil.setBlinkStatus(context, false);
                 NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                 notificationManager.cancel(AppConstants.NotificationBuilderId);
-                if (FunctionHelper.isAppRunning(context, context.getApplicationContext().getPackageName())) {
+                if (PrefsUtil.getActivityVisibility(context)) {
                     Intent refreshingAppIntent = new Intent(context, MainActivity.class);
                     refreshingAppIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     context.startActivity(refreshingAppIntent);
