@@ -149,7 +149,7 @@ public class AppAlarmHelper extends BroadcastReceiver {
 
     private AlarmManager getAlarmManager(Context context) {
 
-        if (this.alarmManager == null) {
+        if (alarmManager == null) {
             alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         }
         return alarmManager;
